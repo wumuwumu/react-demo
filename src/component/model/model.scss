@@ -1,0 +1,50 @@
+.ant-modal-wrap {
+  .ant-modal {
+    max-height: calc(100vh - 30px);
+    .ant-modal-body {
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+    }
+  }
+  &.wm-modal-wrap-nofooter {
+    .ant-modal-body {
+      max-height: calc(100vh - 87px);
+    }
+  }
+}
+
+.wm-modal-wrap {
+  .ant-modal-close {
+    // top: 14px;
+    right: 14px;
+    .ant-modal-close-x {
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+    }
+  }
+}
+
+.wm-modal-wrap-fullscreen {
+  .ant-modal {
+    width: 100% !important;
+    height: 100vh !important;
+    max-height: none !important;
+
+    .ant-modal-content,
+    .ant-modal-header,
+    .ant-modal-footer {
+      border-radius: 0;
+    }
+
+    .ant-modal-body {
+      height: calc(100vh - 108px) !important;
+      max-height: none !important;
+    }
+  }
+  &.wm-modal-wrap-nofooter {
+    .ant-modal-body {
+      height: calc(100vh - 55px) !important;
+    }
+  }
+}

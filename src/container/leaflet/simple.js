@@ -13,12 +13,18 @@ import "./draw/util/LatLngUtil";
 import "./draw/util/TouchEvents";
 
 import "./draw/edit/Edit.Poly";
+
+import InlineModal from "../../component/model/InlineModal";
 export default class simple extends Component {
   constructor(prop) {
     super(prop);
     this.map = null;
     this.tempItems = null;
     this.areaItems = null;
+    this.areaIndex = 0;
+    this.state = {
+      areaFormVisible: false
+    };
   }
 
   componentDidMount() {
@@ -53,16 +59,14 @@ export default class simple extends Component {
     let type = e.layerType,
       layer = e.layer;
 
-    console.log(type);
-    console.log(e);
     layer.on("click", function(e) {
       console.log("1221");
     });
-    console.log(layer.editing);
     layer.editing.enable();
     this.tempItems.clearLayers();
     this.tempItems.addLayer(layer);
     // 弹出对话框，让用户编辑地块的基本信息
+    this.showAreaForm();
   }
 
   createArea() {
@@ -72,11 +76,49 @@ export default class simple extends Component {
     }).enable();
   }
 
+  showAreaForm() {
+    this.setState({
+      areaFormVisible: !this.state.areaFormVisible
+    });
+  }
+
+  createAreaForm() {
+    // 发送异步请求完成
+    setTimeout(this.createAreaComplete.bind(this), 1000);
+  }
+
+  createAreaComplete() {
+    this.setState({
+      areaFormVisible: false
+    });
+    let layers = this.tempItems.getLayers();
+    if (layers.length > 0) {
+      let tempLayer = layers[0];
+      tempLayer.id = "area_" + this.areaIndex++;
+      tempLayer.editing.disable();
+      tempLayer.on("dblclick", e => {
+        let layer = e.target;
+        console.log(e, layer);
+        layer.editing.enable();
+      });
+      this.tempItems.removeLayer(tempLayer);
+      this.areaItems.addLayer(tempLayer);
+    }
+  }
+
   render() {
     return (
       <div>
         <div id="map" className={styles.map}></div>
         <button onClick={this.createArea.bind(this)}>创建基地</button>
+
+        <InlineModal
+          visible={this.state.areaFormVisible}
+          element={<button>显示</button>}
+          onOk={this.createAreaForm.bind(this)}
+        >
+          <div>大家好才是真的好</div>
+        </InlineModal>
       </div>
     );
   }
