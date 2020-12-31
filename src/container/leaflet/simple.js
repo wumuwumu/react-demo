@@ -23,30 +23,38 @@ export default class simple extends Component {
     this.areaItems = null;
     this.areaIndex = 0;
     this.state = {
-      areaFormVisible: false
+      areaFormVisible: false,
     };
   }
 
   componentDidMount() {
     let mapOptions = {
-      attributionControl: false
+      attributionControl: false,
     };
     this.map = L.map("map", mapOptions).setView(
       [37.92388861359015, 115.22048950195312],
       16
     );
-    // L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-    //   attribution:
-    //     '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    //   maxZoom: 18
-    // }).addTo(this.map);
-    L.tileLayer(
-      "http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
-      {
-        subdomains: "1234",
-        attribution: "高德地图"
-      }
-    ).addTo(this.map);
+    L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 18,
+    }).addTo(this.map);
+    // L.tileLayer(
+    //   "http://t1.tianditu.com/vec_c/wmts?layer=vec&style=default&tilematrixset=c&Service=WMTS&Request=GetTile&Version=1.0.0&Format=tiles&TileMatrix={z}&TileCol={x}&TileRow={y}&tk=174705aebfe31b79b3587279e211cb9a",
+    //   {
+    //     maxZoom: 20,
+    //     tileSize: 256,
+    //     zoomOffset: 1,
+    //   }
+    // ).addTo(this.map);
+    // L.tileLayer(
+    //   "http://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}",
+    //   {
+    //     subdomains: "1234",
+    //     attribution: "高德地图"
+    //   }
+    // ).addTo(this.map);
 
     this.areaItems = new L.FeatureGroup();
     this.tempItems = new L.FeatureGroup();
@@ -59,7 +67,7 @@ export default class simple extends Component {
     let type = e.layerType,
       layer = e.layer;
 
-    layer.on("click", function(e) {
+    layer.on("click", function (e) {
       console.log("1221");
     });
     layer.editing.enable();
@@ -72,13 +80,13 @@ export default class simple extends Component {
   createArea() {
     new L.Draw.Polygon(this.map, {
       allowIntersection: false,
-      showArea: true
+      showArea: true,
     }).enable();
   }
 
   showAreaForm() {
     this.setState({
-      areaFormVisible: !this.state.areaFormVisible
+      areaFormVisible: !this.state.areaFormVisible,
     });
   }
 
@@ -89,17 +97,16 @@ export default class simple extends Component {
 
   createAreaComplete() {
     this.setState({
-      areaFormVisible: false
+      areaFormVisible: false,
     });
     let layers = this.tempItems.getLayers();
     if (layers.length > 0) {
       let tempLayer = layers[0];
       tempLayer.id = "area_" + this.areaIndex++;
       tempLayer.editing.disable();
-      tempLayer.on("dblclick", e => {
+      tempLayer.on("dblclick", (e) => {
         let layer = e.target;
         console.log(e, layer);
-        layer.editing.enable();
       });
       this.tempItems.removeLayer(tempLayer);
       this.areaItems.addLayer(tempLayer);
